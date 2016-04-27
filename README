@@ -1,1 +1,10 @@
-read me!
+Setup:
+The data is too big to keep in the repo so you need to download it 
+yourself to use this code.
+
+1) Go to https://www.yelp.com/dataset_challenge/dataset and download the data
+2) mkdir yelp_data
+3) mv the tar file into yelp_data
+4) untar the file with tar -xvf yelp_dataset_challenge_academic_dataset.tar
+5) delete the pdf files
+6) rename the reviews file with mv yelp_academic_dataset_review.json reviews.json
