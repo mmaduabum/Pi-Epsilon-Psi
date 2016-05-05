@@ -4,7 +4,7 @@ import random
 import numpy as np
 from numpy import dot, outer
 import tensorflow as tf
-import utils
+import PottsUtils as utils
 
 
 __author__ = "Christopher Potts"
