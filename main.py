@@ -1,5 +1,5 @@
-
-
+#!/usr/bin/env python
+import utils
 
 #Select option: SVM or NN
 
@@ -20,3 +20,9 @@
 
 #predict
 #report
+
+
+#testing utils functions
+data = utils.create_train_data('yelp_data/tiny.json')
+for i in range(89, 92):
+	print data[i]
