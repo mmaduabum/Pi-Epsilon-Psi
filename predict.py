@@ -66,12 +66,20 @@ def train_nn():
 #report
 
 
-def run_baseline(k=5):
+def run_random_baseline(k=5):
 	raw_data = get_data()
 	target_data = [int(pair[1]) for pair in raw_data]
 	predictions = [random.randint(1, 5) for _ in raw_data]
 	report_results(target_data, predictions)
 
+def run_baseline():
+	raw_data = get_data()
+	input_data = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
+	target_data = [int(pair[1]) for pair in raw_data]
+	state = random.randint(0, int(time.time()))
+	X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
+	clf = svm.SVC(kernel='linear', C=1).fit(X_train, Y_train)
+	print clf.score(X_test, Y_test) 
 
 def report_results(y_test, y_pred):
 	print(f1_score(y_test, y_pred, average="macro"))
