@@ -8,6 +8,11 @@ from sklearn import cross_validation
 from sklearn import svm
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, classification_report, confusion_matrix
 
+
+#(should be a way to save trained classifiers so we dont need to do this every time)
+#http://scikit-learn.org/stable/modules/model_persistence.html
+
+
 #train the 5  1 vs all classifiers
 #train the 10 binary classifiers
 def train_svms(raw_data, size=20):

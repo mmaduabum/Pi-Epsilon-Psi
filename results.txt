@@ -1,7 +1,7 @@
 SVM Random Baseline 5 classes:
-	-average accuracy = 0.20
+	-average accuracy = 0.37
 
-SVM Baseline
+SVM Actual Baseline
 	(features: )
 	-average accuracy = 
 
@@ -14,7 +14,7 @@ SVM New Model
 NN Random Baseline 5 classes:
 	-average accuracy = 0.20
 
-NN Baseline
+NN Actual Baseline
 	(features: )
 	-average accuracy = 
 
