@@ -10,7 +10,7 @@ DATE = 'date'
 Input is a json object
 Returns (review_text, num_stars)"""
 def parse_json_to_pair(data):
-	return (data[TEXT], data[STARS])
+	return (data[TEXT].replace('\n', ' '), data[STARS])
 
 
 """Function to turn a line from the data file into a json object"""

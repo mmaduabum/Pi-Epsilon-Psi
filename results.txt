@@ -1,10 +1,15 @@
 SVM Random Baseline 5 classes:
-	-average accuracy = 0.37
+	-average accuracy = 0.20
 
 SVM Actual Baseline
-	(features: )
-	-average accuracy = 
-
+	(features: size, first 5 words as glove vectors)
+	-average accuracy = 0.29
+		===NOTES===
+		glove shit is hard to use because all feature vectors need to be same size. 
+			-some words dont have gloves, some reviews are longer than others
+			-so i tried to use the first few words from the review and glove only thos
+				-results not very good (~30%)
+		currently trying positve and negative word lists instead of glove
 
 SVM New Model
 	(features: )

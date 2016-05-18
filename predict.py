@@ -5,6 +5,7 @@ import random
 import time
 import our_svm
 import our_nn
+import features
 import numpy as np
 from sklearn import cross_validation
 from sklearn import svm
@@ -59,8 +60,9 @@ Currently only uses random vectors for features.
 TODO: generate a erawl feature vector to obtain the baseline"""
 def run_svm_baseline():
 	raw_data = get_data()
-	input_data = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
-	target_data = [int(pair[1]) for pair in raw_data]
+	#input_data = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
+	input_data = features.generate_feature_vectors(raw_data)
+	target_data = np.array([int(pair[1]) for pair in raw_data])
 	state = random.randint(0, int(time.time()))
 	X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
 	clf = svm.SVC(kernel='linear', C=1).fit(X_train, Y_train)
