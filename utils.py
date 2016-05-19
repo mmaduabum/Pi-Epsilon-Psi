@@ -18,6 +18,10 @@ def text_to_json(text):
 	return json.loads(text)
 
 
+def get_test_data():
+	data = create_train_data('yelp_data/test_small.json')
+	return data
+
 """Function to generate training data from a json file
 Input is a json file of yelp reviews
 Returns a list of (data, label) pairs"""

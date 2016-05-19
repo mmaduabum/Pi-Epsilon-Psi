@@ -39,11 +39,11 @@ def count_feature(words, polarity_list):
 """generates the feature vector for a single train example.
 returns a list of values"""
 def get_all_features(example, st, glove_dict, ignore_list, pos_words, neg_words):
-	feature_vec_size = 50*MAX_WORD_VECS + 1
+	feature_vec_size = 50*MAX_WORD_VECS + 3
 	features = []
 	features.append(size_feature(example))
 	word_list = [w for w in example.split() if w not in ignore_list]
-	stemmed_words = [st.stem(word) for word in word_list]
+	#stemmed_words = [st.stem(word) for word in word_list]
 	features.append(count_feature(word_list, pos_words))
 	features.append(count_feature(word_list, neg_words))
 	#glove feature
@@ -66,9 +66,9 @@ def get_all_features(example, st, glove_dict, ignore_list, pos_words, neg_words)
 """generates feature vectors for each train example and returns
 and np matrix with the values"""
 def generate_feature_vectors(data):
-	GLOVE = PottsUtils.glove2dict('glove.6B.50d.txt')
-	st = nltk.stem.lancaster.LancasterStemmer()
-	stop_words = nltk.corpus.stopwords.words('english')
+	GLOVE = None#PottsUtils.glove2dict('glove.6B.50d.txt')
+	st = None#nltk.stem.lancaster.LancasterStemmer()
+	stop_words = set(nltk.corpus.stopwords.words('english'))
 	corp = nltk.corpus.opinion_lexicon
 	pos_words = set(corp.positive())
 	neg_words = set(corp.negative())
