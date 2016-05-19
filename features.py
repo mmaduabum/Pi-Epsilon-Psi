@@ -70,8 +70,8 @@ def generate_feature_vectors(data):
 	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = nltk.corpus.stopwords.words('english')
 	corp = nltk.corpus.opinion_lexicon
-	pos_words = corp.positive()
-	neg_words = corp.negative()
+	pos_words = set(corp.positive())
+	neg_words = set(corp.negative())
 	vecs = []
 	for train_example in data:
 		feature_vec = get_all_features(train_example[0], st, GLOVE, stop_words, pos_words, neg_words)
