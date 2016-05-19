@@ -15,6 +15,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 METHOD_NN = 0
 METHOD_SVM = 1
 BASELINE = 2
+RANDOM_BASELINE = 3
 BASELINE_VECTOR_SIZE = 20
 
 
@@ -22,9 +23,11 @@ BASELINE_VECTOR_SIZE = 20
 def get_method():
 	print "Which method would you like to test?"
 	method = raw_input("(N)eural nets or (S)VM or simple (B)aseline:")
+	if method == "": return get_method()
 	if method[0] == 'N': return METHOD_NN
 	elif method[0] == 'S': return METHOD_SVM
 	elif method[0] == 'B': return BASELINE
+	elif method[0] == 'R': return RANDOM_BASELINE
 	else:
 		print "Invalid option"
 		return get_method()
@@ -41,8 +44,8 @@ def run_svm_classifier():
 	data = get_data()
 	model = our_svm.Our_SVM()
 	model.train_submodels(data)
-	score = model.score_model()
-	print score
+	predictions, targets = model.score_model()
+	report_results(targets, predictions)
 
 
 """Build an array of neural net binary classifiers to be used inplementing out classification model"""
@@ -81,8 +84,6 @@ def run_baselines():
 """Print evaluation metrics"""
 def report_results(y_test, y_pred):
 	print(f1_score(y_test, y_pred, average="macro"))
-	print(precision_score(y_test, y_pred, average="macro"))
-	print(recall_score(y_test, y_pred, average="macro")) 
 	print(accuracy_score(y_test, y_pred)) 
 
 
@@ -93,6 +94,7 @@ def main():
 	method = get_method();
 	if method == METHOD_NN: run_nn_classifier()
 	elif method == METHOD_SVM: run_svm_classifier()
+	elif method == RANDOM_BASELINE: run_random_baseline()
 	else: run_baselines()
 
 

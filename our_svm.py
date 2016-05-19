@@ -4,12 +4,15 @@ import sys
 import random
 import time
 import features
+import operator
 import numpy as np
 from sklearn import cross_validation
 from sklearn import svm
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, classification_report, confusion_matrix
 
-
+"""Our multi-class classifier
+Uses 15 internal SVMs: 5 using the one vs others method and
+10 more for each pair of classes."""
 class Our_SVM:
 	def __init__(self):
 		self.submodels = []
@@ -36,7 +39,7 @@ class Our_SVM:
 		#train the one vs others classifiers
 		for i in range(5):
 			star = i + 1
-			target_data = [1 if int(ex[1]) == star else -1 for ex in train_data] 
+			target_data = [1 if int(ex[1]) == star else 0 for ex in train_data] 
 			self.submodels.append(self.train_svms(input_data, target_data))
 
 		#train the binary classifiers for the 10 pairs
@@ -65,16 +68,16 @@ class Our_SVM:
 		input_45 = features.generate_feature_vectors(fours_and_fives)
 
 		#generate the targets for each data subset
-		target_12 = [1 if int(ex[1]) == 1 else -1 for ex in ones_and_twos]
-		target_13 = [1 if int(ex[1]) == 1 else -1 for ex in ones_and_threes]
-		target_14 = [1 if int(ex[1]) == 1 else -1 for ex in ones_and_fours]
-		target_15 = [1 if int(ex[1]) == 1 else -1 for ex in ones_and_fives]
-		target_23 = [1 if int(ex[1]) == 2 else -1 for ex in twos_and_threes]
-		target_24 = [1 if int(ex[1]) == 2 else -1 for ex in twos_and_fours]
-		target_25 = [1 if int(ex[1]) == 2 else -1 for ex in twos_and_fives]
-		target_34 = [1 if int(ex[1]) == 3 else -1 for ex in threes_and_fours]
-		target_35 = [1 if int(ex[1]) == 3 else -1 for ex in threes_and_fives]
-		target_45 = [1 if int(ex[1]) == 4 else -1 for ex in fours_and_fives]
+		target_12 = [1 if int(ex[1]) == 1 else 2 for ex in ones_and_twos]
+		target_13 = [1 if int(ex[1]) == 1 else 3 for ex in ones_and_threes]
+		target_14 = [1 if int(ex[1]) == 1 else 4 for ex in ones_and_fours]
+		target_15 = [1 if int(ex[1]) == 1 else 5 for ex in ones_and_fives]
+		target_23 = [2 if int(ex[1]) == 2 else 3 for ex in twos_and_threes]
+		target_24 = [2 if int(ex[1]) == 2 else 4 for ex in twos_and_fours]
+		target_25 = [2 if int(ex[1]) == 2 else 5 for ex in twos_and_fives]
+		target_34 = [3 if int(ex[1]) == 3 else 4 for ex in threes_and_fours]
+		target_35 = [3 if int(ex[1]) == 3 else 5 for ex in threes_and_fives]
+		target_45 = [4 if int(ex[1]) == 4 else 5 for ex in fours_and_fives]
 
 		print "Data building complete"
 
@@ -111,6 +114,62 @@ class Our_SVM:
 		vecs = features.generate_feature_vectors(self.test_data)
 		predictions = []
 		for feature_vector in vecs:
-			pass
-			
+			predictions.append(self.our_predict(feature_vector))
+
+		answers = np.array(answers).reshape(len(answers), 1)
+		predictions = np.array(predictions).reshape(len(predictions), 1)	
+		return (predictions, answers)
+
+	#sorry this is really shit right now, just trying to get it working
+	def our_predict(self, vec):
+		first_guesses = []
+		#Run each one vs others classifer
+		first_guesses.append(self.submodels[self.ONEvALL].predict(vec)[0])
+		first_guesses.append(self.submodels[self.TWOvALL].predict(vec)[0])
+		first_guesses.append(self.submodels[self.THREEvALL].predict(vec)[0])
+		first_guesses.append(self.submodels[self.FOURvALL].predict(vec)[0])
+		first_guesses.append(self.submodels[self.FIVEvALL].predict(vec)[0])
+
+		#check if only one class was predicted
+		if sum(first_guesses) == 1:
+			return first_guesses[first_guesses.index(1)]
+
+
+		if sum(first_guesses) == 2:
+			#otherwise, run the pairwise classifiers
+			first_index = first_guesses.index(1)
+			class_a = first_guesses[first_index]
+			class_b = first_guesses[first_guesses.index(1, first_index+1)]
+
+			if (class_a, class_b) == (1, 2):
+				return self.submodels[self.ONEvTWO].predict(vec)[0]
+			elif (class_a, class_b) == (1, 3):
+				return self.submodels[self.ONEvTHREE].predict(vec)[0]
+			elif (class_a, class_b) == (1, 4):
+				return self.submodels[self.ONEvFOUR].predict(vec)[0]
+			elif (class_a, class_b) == (1, 5):
+				return self.submodels[self.ONEvFIVE].predict(vec)[0]
+			elif (class_a, class_b) == (2, 3):
+				return self.submodels[self.TWOvTHREE].predict(vec)[0]
+			elif (class_a, class_b) == (2, 4):
+				return self.submodels[self.TWOvFOUR].predict(vec)[0]
+			elif (class_a, class_b) == (2, 5):
+				return self.submodels[self.TWOvFIVE].predict(vec)[0]
+			elif (class_a, class_b) == (3, 4):
+				return self.submodels[self.THREEvFOUR].predict(vec)[0]
+			elif (class_a, class_b) == (3, 5):
+				return self.submodels[self.THREEvFIVE].predict(vec)[0]
+			elif (class_a, class_b) == (4, 5):
+				return self.submodels[self.FOURvFIVE].predict(vec)[0]
+			else:
+				print "ERROR"
+		
+		#If 0, 3, 4, or 5 classes were positive, run all pairwise calssifiers
+		votes = {1 : 0, 2 : 0, 3 : 0, 4 : 0, 5 : 0}
+		for i, m in enumerate(self.submodels):
+			if i < self.ONEvTWO: continue
+			votes[m.predict(vec)[0]] += 1
+
+		
+		return max(votes.iteritems(), key=operator.itemgetter(1))[0]
 
