@@ -12,6 +12,8 @@ SVM Actual Baseline
 		currently trying positve and negative word lists instead of glove
 			-so using this it gets up to about 45% with this shit but its prettry variable (31-57) 
 				on the tiny dataset and the 'small' one takes 1000000000000000 years to run so...
+				-K i created a more reasonable dataset (3000) and it runs in about 17 minutes with just
+					the 3 features (size, neg words, pos words) and got 44% accuracy
 
 SVM New Model
 	(features: )
