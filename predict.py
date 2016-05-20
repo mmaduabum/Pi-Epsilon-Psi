@@ -7,6 +7,7 @@ import our_svm
 import our_nn
 import features
 import warnings
+import PottsNet
 import numpy as np
 from sklearn import cross_validation
 from sklearn import svm
@@ -37,7 +38,7 @@ def get_method():
 #parse json data into desired form
 def get_data():
 	# (text, rating) pairs
-	raw_data = utils.create_train_data('yelp_data/very_small.json')
+	raw_data = utils.create_train_data('yelp_data/tiny.json')
 	return raw_data
 
 """Build an array of SVM binary classifiers to be used inplementing out classification model"""
@@ -62,9 +63,7 @@ def run_random_baseline(k=5):
 	report_results(target_data, predictions)
 
 
-"""Use an SVM natively as a 5-class classifeir to get a legitimate baseline
-Currently only uses random vectors for features.
-TODO: generate a erawl feature vector to obtain the baseline"""
+"""Use an SVM natively as a 5-class classifeir to get a legitimate baseline"""
 def run_svm_baseline():
 	raw_data = get_data()
 	#input_data = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
@@ -80,9 +79,34 @@ def run_svm_baseline():
 	print x 
 
 
+
+def nn_baseline_predict(net):
+	test_data = utils.get_test_data()
+	test_examples = features.generate_feature_vectors(test_data)
+	test_target = [int(p[1]) for p in test_data]
+	predictions = []
+	for ex in test_examples:
+		pred = int(net.predict(ex))
+		predictions.append(pred)
+
+	report_results(test_target, predictions)
+
+
+def run_nn_baseline():
+	raw_data = get_data()
+	feature_vectors = features.generate_feature_vectors(raw_data)
+	target_data = [int(pair[1]) for pair in raw_data]
+	train_data = [(vec, np.array([star])) for vec, star in zip(feature_vectors, target_data)]
+	net = PottsNet.ShallowNeuralNetwork()
+	print "Training Neural Net..."
+	net.fit(train_data)
+	print "Predicting results"
+	nn_baseline_predict(net)
+
+
 def run_baselines():
-	run_svm_baseline();
-	#run_nn_baseline()
+	#run_svm_baseline();
+	run_nn_baseline()
 
 
 """Print evaluation metrics"""
