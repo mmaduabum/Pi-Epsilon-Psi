@@ -16,8 +16,11 @@ SVM Actual Baseline
 					the 3 features (size, neg words, pos words) and got 44% accuracy
 
 SVM New Model
-	(features: )
-	-average accuracy = 
+	(features: size, poswords, negwords) 
+	-average accuracy = 0.446 (on tiny)
+	-just ran it on very_small.json (64 minutes) and got 36.3% accuracy 
+		-problem is the one v all classifiers always return false
+			-need better features for it to start working i think
 
 
 NN Random Baseline 5 classes:

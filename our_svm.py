@@ -137,6 +137,7 @@ class Our_SVM:
 
 		if sum(first_guesses) == 2:
 			#otherwise, run the pairwise classifiers
+			print "things are happening"
 			first_index = first_guesses.index(1)
 			class_a = first_guesses[first_index]
 			class_b = first_guesses[first_guesses.index(1, first_index+1)]
@@ -163,7 +164,10 @@ class Our_SVM:
 				return self.submodels[self.FOURvFIVE].predict(vec)[0]
 			else:
 				print "ERROR"
-		
+	
+
+		if sum(first_guesses) > 2: print "things could be happening, but aren't"		
+	
 		#If 0, 3, 4, or 5 classes were positive, run all pairwise calssifiers
 		votes = {1 : 0, 2 : 0, 3 : 0, 4 : 0, 5 : 0}
 		for i, m in enumerate(self.submodels):

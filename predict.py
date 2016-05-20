@@ -6,6 +6,7 @@ import time
 import our_svm
 import our_nn
 import features
+import warnings
 import numpy as np
 from sklearn import cross_validation
 from sklearn import svm
@@ -36,7 +37,7 @@ def get_method():
 #parse json data into desired form
 def get_data():
 	# (text, rating) pairs
-	raw_data = utils.create_train_data('yelp_data/tiny.json')
+	raw_data = utils.create_train_data('yelp_data/very_small.json')
 	return raw_data
 
 """Build an array of SVM binary classifiers to be used inplementing out classification model"""
@@ -70,9 +71,12 @@ def run_svm_baseline():
 	input_data = features.generate_feature_vectors(raw_data)
 	target_data = np.array([int(pair[1]) for pair in raw_data])
 	state = random.randint(0, int(time.time()))
-	X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
-	clf = svm.SVC(kernel='linear', C=1).fit(X_train, Y_train)
-	x = clf.score(X_test, Y_test)
+	#X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
+	test_data = utils.get_test_data()
+	target_test = np.array([int(pair[1]) for pair in test_data])
+	input_test = features.generate_feature_vectors(test_data)
+	clf = svm.SVC(kernel='linear', C=1).fit(input_data, target_data)
+	x = clf.score(input_test, target_test)
 	print x 
 
 
@@ -83,11 +87,12 @@ def run_baselines():
 
 """Print evaluation metrics"""
 def report_results(y_test, y_pred):
-	print(f1_score(y_test, y_pred, average="macro"))
+	#print(f1_score(y_test, y_pred, average="macro"))
 	print(accuracy_score(y_test, y_pred)) 
 
 
 def main():
+	warnings.filterwarnings("ignore")
 	#set a random seed
 	random.seed(int(time.time()))
 	#get which prediction method to use
