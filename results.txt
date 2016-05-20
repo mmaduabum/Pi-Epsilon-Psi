@@ -24,12 +24,16 @@ SVM New Model
 
 
 NN Random Baseline 5 classes:
-	-average accuracy = 0.20
+	-average accuracy = 0.0
 
 NN Actual Baseline
-	(features: )
-	-average accuracy = 
+	(features: glove)
+	-average accuracy = 0
+		-its predicting class 0 everytime for some reason 
 
+	okay so the neural net cant do more than 2 classes. Running it with our 3 features on 1,2 vs 3,4,5 gets 75% accuracy
+		Note: when the cutoff is moved to distinguish between 1,2,3 vs 4,5 the accuracy goes down to 59%
+	we cant generate a multiclass baseline. I'm gonna just implement our model
 
 NN New Model
 	(features: )
