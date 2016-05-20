@@ -38,10 +38,9 @@ def count_feature(words, polarity_list):
 
 """generates the feature vector for a single train example.
 returns a list of values"""
-def get_all_features(example, st, glove_dict, ignore_list, pos_words, neg_words):
+def get_all_features(example, st, glove_dict, word_list, pos_words, neg_words):
 	features = []
 	features.append(size_feature(example))
-	word_list = [w for w in example.split() if w not in ignore_list]
 	#stemmed_words = [st.stem(word) for word in word_list]
 	features.append(count_feature(word_list, pos_words))
 	features.append(count_feature(word_list, neg_words))
@@ -50,9 +49,8 @@ def get_all_features(example, st, glove_dict, ignore_list, pos_words, neg_words)
 
 
 
-def get_glove_features(word_list, glove_dict):
-	features = []
-	feature_vec_size = 50*MIN_NUM_WORDS
+def get_glove_features(features, word_list, glove_dict):
+	feature_vec_size = 50*MIN_NUM_WORDS +3
 	if len(word_list) < MIN_NUM_WORDS:
 		print "fucked"
 		return [0 for i in range(feature_vec_size)]
@@ -79,16 +77,17 @@ def nn_features(data, glove_dict, st, ignore_list, pos_words, neg_words):
 
 """generates feature vectors for each train example and returns
 and np matrix with the values"""
-def generate_feature_vectors(data, nn=False):
+def generate_feature_vectors(data, glove=True):
 	GLOVE = PottsUtils.glove2dict('glove.6B.50d.txt')
 	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = set(nltk.corpus.stopwords.words('english'))
 	corp = nltk.corpus.opinion_lexicon
 	pos_words = set(corp.positive())
 	neg_words = set(corp.negative())
-	if nn: return nn_features(data, GLOVE, st, stop_words, pos_words, neg_words)
 	vecs = []
 	for train_example in data:
-		feature_vec = get_all_features(train_example[0], st, GLOVE, stop_words, pos_words, neg_words)
+		word_list = [w for w in train_example[0].split() if w not in stop_words]
+		feature_vec = get_all_features(train_example[0], st, GLOVE, word_list, pos_words, neg_words)
+		if glove: feature_vec = get_glove_features(feature_vec, word_list, GLOVE)
 		vecs.append(np.array(feature_vec, dtype=object))
 	return np.array(vecs, dtype=object)

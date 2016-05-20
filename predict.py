@@ -84,7 +84,7 @@ def nn_baseline_predict(net):
 	test_data = utils.get_test_data()
 	test_examples = features.generate_feature_vectors(test_data, NET)
 	#test_examples = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(test_data))])
-	test_target = [1 if int(p[1]) > 3 else -1 for p in test_data]
+	test_target = [1 if int(p[1]) > 2 else -1 for p in test_data]
 	predictions = []
 	for ex in test_examples:
 		pred = net.predict(ex)
@@ -98,7 +98,7 @@ def run_nn_baseline():
 	raw_data = get_data()
 	feature_vectors = features.generate_feature_vectors(raw_data, NET)
 	#feature_vectors = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
-	target_data = [1 if int(pair[1]) > 3 else -1 for pair in raw_data]
+	target_data = [1 if int(pair[1]) > 2 else -1 for pair in raw_data]
 	train_data = [(vec, np.array([star])) for vec, star in zip(feature_vectors, target_data)]
 	net = PottsNet.ShallowNeuralNetwork()
 	print "Training Neural Net..."

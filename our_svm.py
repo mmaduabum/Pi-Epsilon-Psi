@@ -35,7 +35,9 @@ class Our_SVM:
 
 	def train_submodels(self, train_data):
 		print "Building Datasets..."
-		input_data = features.generate_feature_vectors(train_data)
+		input_data = features.generate_feature_vectors(train_data, True)
+		all_targets = [int(ex[1]) for ex in train_data]
+		self.baseline_model = self.train_svms(input_data, all_targets)
 		#train the one vs others classifiers
 		for i in range(5):
 			star = i + 1
@@ -56,16 +58,16 @@ class Our_SVM:
 		fours_and_fives = [ex for ex in train_data if int(ex[1]) == 4 or int(ex[1]) == 5]
 
 		#generate feature vectors for each data subset
-		input_12 = features.generate_feature_vectors(ones_and_twos)
-		input_13 = features.generate_feature_vectors(ones_and_threes)
-		input_14 = features.generate_feature_vectors(ones_and_fours)
-		input_15 = features.generate_feature_vectors(ones_and_fives)
-		input_23 = features.generate_feature_vectors(twos_and_threes)
-		input_24 = features.generate_feature_vectors(twos_and_fours)
-		input_25 = features.generate_feature_vectors(twos_and_fives)
-		input_34 = features.generate_feature_vectors(threes_and_fours)
-		input_35 = features.generate_feature_vectors(threes_and_fives)
-		input_45 = features.generate_feature_vectors(fours_and_fives)
+		input_12 = features.generate_feature_vectors(ones_and_twos, True)
+		input_13 = features.generate_feature_vectors(ones_and_threes, True)
+		input_14 = features.generate_feature_vectors(ones_and_fours, True)
+		input_15 = features.generate_feature_vectors(ones_and_fives, True)
+		input_23 = features.generate_feature_vectors(twos_and_threes, True)
+		input_24 = features.generate_feature_vectors(twos_and_fours, True)
+		input_25 = features.generate_feature_vectors(twos_and_fives, True)
+		input_34 = features.generate_feature_vectors(threes_and_fours, True)
+		input_35 = features.generate_feature_vectors(threes_and_fives, True)
+		input_45 = features.generate_feature_vectors(fours_and_fives, True)
 
 		#generate the targets for each data subset
 		target_12 = [1 if int(ex[1]) == 1 else 2 for ex in ones_and_twos]
@@ -111,13 +113,14 @@ class Our_SVM:
 	def score_model(self):
 		print "scoring..."
 		answers = [int(ex[1]) for ex in self.test_data]
-		vecs = features.generate_feature_vectors(self.test_data)
+		vecs = features.generate_feature_vectors(self.test_data, True)
 		predictions = []
 		for feature_vector in vecs:
 			predictions.append(self.our_predict(feature_vector))
 
 		answers = np.array(answers).reshape(len(answers), 1)
-		predictions = np.array(predictions).reshape(len(predictions), 1)	
+		print str(predictions)	
+		predictions = np.array(predictions).reshape(len(predictions), 1)
 		return (predictions, answers)
 
 	#sorry this is really shit right now, just trying to get it working
@@ -137,10 +140,9 @@ class Our_SVM:
 
 		if sum(first_guesses) == 2:
 			#otherwise, run the pairwise classifiers
-			print "things are happening"
 			first_index = first_guesses.index(1)
-			class_a = first_guesses[first_index]
-			class_b = first_guesses[first_guesses.index(1, first_index+1)]
+			class_a = first_index + 1
+			class_b = first_guesses.index(1, first_index+1) + 1
 
 			if (class_a, class_b) == (1, 2):
 				return self.submodels[self.ONEvTWO].predict(vec)[0]
@@ -166,14 +168,18 @@ class Our_SVM:
 				print "ERROR"
 	
 
-		if sum(first_guesses) > 2: print "things could be happening, but aren't"		
-	
-		#If 0, 3, 4, or 5 classes were positive, run all pairwise calssifiers
+		#if sum(first_guesses) > 2: print "things could be happening, but aren't"		
+
+		return self.baseline_model.predict(vec)[0]
+
+		#								  |
+		#the baseline predictor does this v by default	
+		"""#If 0, 3, 4, or 5 classes were positive, run all pairwise calssifiers
 		votes = {1 : 0, 2 : 0, 3 : 0, 4 : 0, 5 : 0}
 		for i, m in enumerate(self.submodels):
 			if i < self.ONEvTWO: continue
 			votes[m.predict(vec)[0]] += 1
 
 		
-		return max(votes.iteritems(), key=operator.itemgetter(1))[0]
+		return max(votes.iteritems(), key=operator.itemgetter(1))[0]"""
 

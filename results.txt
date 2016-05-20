@@ -21,17 +21,18 @@ SVM New Model
 	-just ran it on very_small.json (64 minutes) and got 36.3% accuracy 
 		-problem is the one v all classifiers always return false
 			-need better features for it to start working i think
-
+	-with glvoe features im getting 16.6% :(
+		-goes up to 18% when using glove + size, sentiment word features
 
 NN Random Baseline 5 classes:
-	-average accuracy = 0.0
+	-impossible
 
 NN Actual Baseline
 	(features: glove)
 	-average accuracy = 0
 		-its predicting class 0 everytime for some reason 
 
-	okay so the neural net cant do more than 2 classes. Running it with our 3 features on 1,2 vs 3,4,5 gets 75% accuracy
+	okay so the neural net cant do more than 2 classes. Running it with glove features on 1,2 vs 3,4,5 gets 75% accuracy
 		Note: when the cutoff is moved to distinguish between 1,2,3 vs 4,5 the accuracy goes down to 59%
 	we cant generate a multiclass baseline. I'm gonna just implement our model
 
