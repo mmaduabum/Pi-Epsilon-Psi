@@ -39,15 +39,21 @@ def count_feature(words, polarity_list):
 """generates the feature vector for a single train example.
 returns a list of values"""
 def get_all_features(example, st, glove_dict, ignore_list, pos_words, neg_words):
-	feature_vec_size = 50*MAX_WORD_VECS + 3
 	features = []
 	features.append(size_feature(example))
 	word_list = [w for w in example.split() if w not in ignore_list]
 	#stemmed_words = [st.stem(word) for word in word_list]
 	features.append(count_feature(word_list, pos_words))
 	features.append(count_feature(word_list, neg_words))
-	#glove feature
-	"""if len(word_list) < MIN_NUM_WORDS:
+
+	return features
+
+
+
+def get_glove_features(word_list, glove_dict):
+	features = []
+	feature_vec_size = 50*MIN_NUM_WORDS
+	if len(word_list) < MIN_NUM_WORDS:
 		print "fucked"
 		return [0 for i in range(feature_vec_size)]
 	words = 0
@@ -58,20 +64,29 @@ def get_all_features(example, st, glove_dict, ignore_list, pos_words, neg_words)
 		if add: 
 			for val in vec: features.append(val)
 		else:
-			for i in range(50): features.append(0)"""
-
+			for i in range(50): features.append(0)
 	return features
+
+
+def nn_features(data, glove_dict, st, ignore_list, pos_words, neg_words):
+	vecs = []
+	for train_example in data:
+		word_list = [w for w in train_example[0].split() if w not in ignore_list]
+		feature_vec = get_glove_features(word_list, glove_dict)
+		vecs.append(np.array(feature_vec))
+	return np.array(vecs)
 
 
 """generates feature vectors for each train example and returns
 and np matrix with the values"""
-def generate_feature_vectors(data):
-	GLOVE = None#PottsUtils.glove2dict('glove.6B.50d.txt')
-	st = None#nltk.stem.lancaster.LancasterStemmer()
+def generate_feature_vectors(data, nn=False):
+	GLOVE = PottsUtils.glove2dict('glove.6B.50d.txt')
+	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = set(nltk.corpus.stopwords.words('english'))
 	corp = nltk.corpus.opinion_lexicon
 	pos_words = set(corp.positive())
 	neg_words = set(corp.negative())
+	if nn: return nn_features(data, GLOVE, st, stop_words, pos_words, neg_words)
 	vecs = []
 	for train_example in data:
 		feature_vec = get_all_features(train_example[0], st, GLOVE, stop_words, pos_words, neg_words)

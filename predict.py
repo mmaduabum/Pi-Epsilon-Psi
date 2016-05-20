@@ -19,7 +19,7 @@ METHOD_SVM = 1
 BASELINE = 2
 RANDOM_BASELINE = 3
 BASELINE_VECTOR_SIZE = 20
-
+NET = True
 
 #Select option: SVM or NN
 def get_method():
@@ -82,7 +82,7 @@ def run_svm_baseline():
 
 def nn_baseline_predict(net):
 	test_data = utils.get_test_data()
-	test_examples = features.generate_feature_vectors(test_data)
+	test_examples = features.generate_feature_vectors(test_data, NET)
 	test_target = [int(p[1]) for p in test_data]
 	predictions = []
 	for ex in test_examples:
@@ -94,7 +94,7 @@ def nn_baseline_predict(net):
 
 def run_nn_baseline():
 	raw_data = get_data()
-	feature_vectors = features.generate_feature_vectors(raw_data)
+	feature_vectors = features.generate_feature_vectors(raw_data, NET)
 	target_data = [int(pair[1]) for pair in raw_data]
 	train_data = [(vec, np.array([star])) for vec, star in zip(feature_vectors, target_data)]
 	net = PottsNet.ShallowNeuralNetwork()
