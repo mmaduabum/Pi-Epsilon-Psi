@@ -46,4 +46,4 @@ NN New Model
 	(features: glove + size, pos, meg)
 	-average accuracy = 0.407960199005 (one run on tiny) 
 						0.405970149254 (one run on very_small)
-						0.275621890547 (run on small.json)
+						0.275621890547 (run on small.json)  --80 minutes to run
