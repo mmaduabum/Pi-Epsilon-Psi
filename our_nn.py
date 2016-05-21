@@ -148,9 +148,9 @@ class Our_NN:
 		
 		if pos_count == 2:
 			#otherwise, run the pairwise classifiers
-			first_index = first_guesses.index(1)
+			first_index = positives.index(1)
 			class_a = first_index + 1
-			class_b = first_guesses.index(1, first_index+1) + 1
+			class_b = positives.index(1, first_index+1) + 1
 
 			if (class_a, class_b) == (1, 2):
 				if self.submodels[self.ONEvTWO].predict(ex)[0] > 0: return 1
