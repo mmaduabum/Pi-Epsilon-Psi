@@ -19,7 +19,7 @@ METHOD_SVM = 1
 BASELINE = 2
 RANDOM_BASELINE = 3
 BASELINE_VECTOR_SIZE = 20
-NET = False
+NET = True
 
 #Select option: SVM or NN
 def get_method():
@@ -44,7 +44,7 @@ def get_data():
 """Build an array of SVM binary classifiers to be used inplementing out classification model"""
 def run_svm_classifier():
 	data = get_data()
-	model = our_svm.Our_SVM()
+	model = our_svm.Our_SVM(True)
 	model.train_submodels(data)
 	predictions, targets = model.score_model()
 	report_results(targets, predictions)
@@ -55,7 +55,11 @@ def run_nn_classifier():
 	m = our_nn.Our_NN(NET)
 	raw_data = get_data()
 	m.train_submodels(raw_data)
-	m.score_model()
+	preds = m.score_model()
+	test_examples = m.test_data
+	target = [int(exp[1]) for exp in test_examples]
+	report_results(target, preds)
+	#my_report(new_name, preds)
 
 
 """Randomly guess predictions to get a basline accuracy"""

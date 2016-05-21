@@ -120,4 +120,98 @@ class Our_NN:
 
 	def score_model(self):
 		print "scoring..."
+		test_examples = features.generate_feature_vectors(self.test_data, self.use_glove)
+		predictions = []
+		for ex in test_examples:
+			p = self.our_predict(ex)
+			predictions.append(p)
+		
+		return predictions
 
+
+	def our_predict(self, ex):
+		first_guesses = []
+		#Run each one vs others classifer
+		first_guesses.append(self.submodels[self.ONEvALL].predict(ex)[0])
+		first_guesses.append(self.submodels[self.TWOvALL].predict(ex)[0])
+		first_guesses.append(self.submodels[self.THREEvALL].predict(ex)[0])
+		first_guesses.append(self.submodels[self.FOURvALL].predict(ex)[0])
+		first_guesses.append(self.submodels[self.FIVEvALL].predict(ex)[0])
+
+		
+		positives = [1 if x > 0 else 0 for x in first_guesses]
+		pos_count = sum(positives)
+
+		if pos_count == 1:
+			return positives.index(1) + 1	
+
+		
+		if pos_count == 2:
+			#otherwise, run the pairwise classifiers
+			first_index = first_guesses.index(1)
+			class_a = first_index + 1
+			class_b = first_guesses.index(1, first_index+1) + 1
+
+			if (class_a, class_b) == (1, 2):
+				if self.submodels[self.ONEvTWO].predict(ex)[0] > 0: return 1
+				else: return 2
+			elif (class_a, class_b) == (1, 3):
+				if self.submodels[self.ONEvTHREE].predict(ex)[0] > 0: return 1
+				else: return 3
+			elif (class_a, class_b) == (1, 4):
+				if self.submodels[self.ONEvFOUR].predict(ex)[0] > 0: return 1
+				else: return 4
+			elif (class_a, class_b) == (1, 5):
+				if self.submodels[self.ONEvFIVE].predict(ex)[0] > 0: return 1
+				else: return 5
+			elif (class_a, class_b) == (2, 3):
+				if self.submodels[self.TWOvTHREE].predict(ex)[0] >  0: return 2
+				else: return 3
+			elif (class_a, class_b) == (2, 4):
+				if self.submodels[self.TWOvFOUR].predict(ex)[0] > 0: return 2
+				else: return 4
+			elif (class_a, class_b) == (2, 5):
+				if self.submodels[self.TWOvFIVE].predict(ex)[0] > 0: return 2
+				else: return 5
+			elif (class_a, class_b) == (3, 4):
+				if self.submodels[self.THREEvFOUR].predict(ex)[0] > 0: return 3
+				else: return 4
+			elif (class_a, class_b) == (3, 5):
+				if self.submodels[self.THREEvFIVE].predict(ex)[0] > 0: return 3
+				else: return 5
+			elif (class_a, class_b) == (4, 5):
+				if self.submodels[self.FOURvFIVE].predict(ex)[0] > 0: return 4
+				else: return 5
+			else:
+				print "ERROR"
+
+			
+		votes = {1 : 0, 2 : 0, 3 : 0, 4 : 0, 5 : 0}
+		onevs = [self.ONEvTWO, self.ONEvTHREE, self.ONEvFOUR, self.ONEvFIVE]
+		for i, idx in enumerate(onevs):
+			rating = i + 2
+			pred = self.submodels[idx].predict(ex)[0] 
+			if pred > 0: votes[1] += 1
+			else: votes[rating] += 1
+
+		twovs = [self.TWOvTHREE, self.TWOvFOUR, self.TWOvFIVE]
+		for i, idx in enumerate(twovs):
+			rating = i + 3
+			pred = self.submodels[idx].predict(ex)[0]
+			if pred > 0: votes[2] += 1
+			else: votes[rating] += 1	
+
+		threevs = [self.THREEvFOUR, self.THREEvFIVE]
+		for i, idx in enumerate(threevs):
+			rating = i + 4
+			pred = self.submodels[idx].predict(ex)[0]
+			if pred > 0: votes[3] += 1
+			else: votes[rating] += 1
+
+		pred = self.submodels[self.FOURvFIVE].predict(ex)[0]
+		if pred > 0: votes[4] += 1
+		else: votes[5] += 1
+
+		return max(votes.iteritems(), key=operator.itemgetter(1))[0]	
+
+					

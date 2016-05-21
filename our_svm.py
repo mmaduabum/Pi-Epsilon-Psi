@@ -114,7 +114,7 @@ class Our_SVM:
 	def score_model(self):
 		print "scoring..."
 		answers = [int(ex[1]) for ex in self.test_data]
-		vecs = features.generate_feature_vectors(self.test_data, True)
+		vecs = features.generate_feature_vectors(self.test_data, self.use_glove)
 		predictions = []
 		for feature_vector in vecs:
 			predictions.append(self.our_predict(feature_vector))
@@ -136,7 +136,7 @@ class Our_SVM:
 
 		#check if only one class was predicted
 		if sum(first_guesses) == 1:
-			return first_guesses[first_guesses.index(1)]
+			return first_guesses.index(1) + 1
 
 
 		if sum(first_guesses) == 2:

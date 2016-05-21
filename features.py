@@ -89,5 +89,5 @@ def generate_feature_vectors(data, glove=True):
 		word_list = [w for w in train_example[0].split() if w not in stop_words]
 		feature_vec = get_all_features(train_example[0], st, GLOVE, word_list, pos_words, neg_words)
 		if glove: feature_vec = get_glove_features(feature_vec, word_list, GLOVE)
-		vecs.append(np.array(feature_vec, dtype=object))
-	return np.array(vecs, dtype=object)
+		vecs.append(np.array(feature_vec))
+	return np.array(vecs)

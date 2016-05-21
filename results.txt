@@ -8,7 +8,7 @@ SVM Actual Baseline
 		glove shit is hard to use because all feature vectors need to be same size. 
 			-some words dont have gloves, some reviews are longer than others
 			-so i tried to use the first few words from the review and glove only thos
-				-results not very good (~30%)
+				-results not very good (~29%)
 		currently trying positve and negative word lists instead of glove
 			-so using this it gets up to about 45% with this shit but its prettry variable (31-57) 
 				on the tiny dataset and the 'small' one takes 1000000000000000 years to run so...
@@ -20,9 +20,12 @@ SVM New Model
 	-average accuracy = 0.446 (on tiny)
 	-just ran it on very_small.json (64 minutes) and got 36.3% accuracy 
 		-problem is the one v all classifiers always return false
+	-After fixing bug: all predictions are 1 or 5 and accuracy is 45%
 			-need better features for it to start working i think
 	-with glvoe features im getting 16.6% :(
 		-goes up to 18% when using glove + size, sentiment word features
+
+	PROGRESS: after fixing the bug, our model on glove features gets 31.9%! (this was on the tiny set. gonna run overnight on small)
 
 NN Random Baseline 5 classes:
 	-impossible
@@ -37,5 +40,8 @@ NN Actual Baseline
 	we cant generate a multiclass baseline. I'm gonna just implement our model
 
 NN New Model
-	(features: )
+	(features: size, pos, neg)
+	-average accuracy = 0.41 (one run on tiny)
+
+	(features: glove + size, pos, meg)
 	-average accuracy = 
