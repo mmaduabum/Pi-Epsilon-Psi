@@ -19,7 +19,7 @@ METHOD_SVM = 1
 BASELINE = 2
 RANDOM_BASELINE = 3
 BASELINE_VECTOR_SIZE = 20
-NET = True
+NET = False
 
 #Select option: SVM or NN
 def get_method():
@@ -52,7 +52,10 @@ def run_svm_classifier():
 
 """Build an array of neural net binary classifiers to be used inplementing out classification model"""
 def run_nn_classifier():
-	pass
+	m = our_nn.Our_NN(NET)
+	raw_data = get_data()
+	m.train_submodels(raw_data)
+	m.score_model()
 
 
 """Randomly guess predictions to get a basline accuracy"""
@@ -67,13 +70,13 @@ def run_random_baseline(k=5):
 def run_svm_baseline():
 	raw_data = get_data()
 	#input_data = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
-	input_data = features.generate_feature_vectors(raw_data)
+	input_data = features.generate_feature_vectors(raw_data, False)
 	target_data = np.array([int(pair[1]) for pair in raw_data])
 	state = random.randint(0, int(time.time()))
 	#X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
 	test_data = utils.get_test_data()
 	target_test = np.array([int(pair[1]) for pair in test_data])
-	input_test = features.generate_feature_vectors(test_data)
+	input_test = features.generate_feature_vectors(test_data, False)
 	clf = svm.SVC(kernel='linear', C=1).fit(input_data, target_data)
 	x = clf.score(input_test, target_test)
 	print x 
@@ -108,7 +111,7 @@ def run_nn_baseline():
 
 
 def run_baselines():
-	#run_svm_baseline();
+	run_svm_baseline();
 	run_nn_baseline()
 
 

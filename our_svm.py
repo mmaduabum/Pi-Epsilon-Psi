@@ -14,8 +14,9 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 Uses 15 internal SVMs: 5 using the one vs others method and
 10 more for each pair of classes."""
 class Our_SVM:
-	def __init__(self):
+	def __init__(self, use_glove=False):
 		self.submodels = []
+		self.use_glove = use_glove
 		self.test_data = utils.get_test_data()
 		self.ONEvALL = 0
 		self.TWOvALL = 1
@@ -35,7 +36,7 @@ class Our_SVM:
 
 	def train_submodels(self, train_data):
 		print "Building Datasets..."
-		input_data = features.generate_feature_vectors(train_data, True)
+		input_data = features.generate_feature_vectors(train_data, self.use_glove)
 		all_targets = [int(ex[1]) for ex in train_data]
 		self.baseline_model = self.train_svms(input_data, all_targets)
 		#train the one vs others classifiers
@@ -58,16 +59,16 @@ class Our_SVM:
 		fours_and_fives = [ex for ex in train_data if int(ex[1]) == 4 or int(ex[1]) == 5]
 
 		#generate feature vectors for each data subset
-		input_12 = features.generate_feature_vectors(ones_and_twos, True)
-		input_13 = features.generate_feature_vectors(ones_and_threes, True)
-		input_14 = features.generate_feature_vectors(ones_and_fours, True)
-		input_15 = features.generate_feature_vectors(ones_and_fives, True)
-		input_23 = features.generate_feature_vectors(twos_and_threes, True)
-		input_24 = features.generate_feature_vectors(twos_and_fours, True)
-		input_25 = features.generate_feature_vectors(twos_and_fives, True)
-		input_34 = features.generate_feature_vectors(threes_and_fours, True)
-		input_35 = features.generate_feature_vectors(threes_and_fives, True)
-		input_45 = features.generate_feature_vectors(fours_and_fives, True)
+		input_12 = features.generate_feature_vectors(ones_and_twos, self.use_glove)
+		input_13 = features.generate_feature_vectors(ones_and_threes, self.use_glove)
+		input_14 = features.generate_feature_vectors(ones_and_fours, self.use_glove)
+		input_15 = features.generate_feature_vectors(ones_and_fives, self.use_glove)
+		input_23 = features.generate_feature_vectors(twos_and_threes, self.use_glove)
+		input_24 = features.generate_feature_vectors(twos_and_fours, self.use_glove)
+		input_25 = features.generate_feature_vectors(twos_and_fives, self.use_glove)
+		input_34 = features.generate_feature_vectors(threes_and_fours, self.use_glove)
+		input_35 = features.generate_feature_vectors(threes_and_fives, self.use_glove)
+		input_45 = features.generate_feature_vectors(fours_and_fives, self.use_glove)
 
 		#generate the targets for each data subset
 		target_12 = [1 if int(ex[1]) == 1 else 2 for ex in ones_and_twos]
