@@ -116,13 +116,17 @@ def run_nn_baseline():
 
 def run_baselines():
 	run_svm_baseline();
-	run_nn_baseline()
+	#run_nn_baseline()
 
 
 """Print evaluation metrics"""
 def report_results(y_test, y_pred):
 	#print(f1_score(y_test, y_pred, average="macro"))
+	print "="*80
+	print(classification_report(y_test, y_pred, target_names=['1', '2', '3', '4', '5']))
+	print "\naccuracy:"
 	print(accuracy_score(y_test, y_pred)) 
+	print "="*80
 
 
 def main():

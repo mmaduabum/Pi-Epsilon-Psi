@@ -8,3 +8,7 @@ yourself to use this code.
 4) untar the file with tar -xvf yelp_dataset_challenge_academic_dataset.tar
 5) delete the pdf files
 6) rename the reviews file with mv yelp_academic_dataset_review.json reviews.json
+
+
+Run:
+python predict.py
