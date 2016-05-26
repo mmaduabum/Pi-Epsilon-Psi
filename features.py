@@ -2,6 +2,7 @@
 import PottsUtils
 import sys
 import random
+import collections
 import time
 import our_svm
 import our_nn
@@ -28,6 +29,8 @@ def size_feature(example):
 	return float(len(example))
 
 
+def num_words_feature(words):
+	return len(words)
 
 def count_feature(words, polarity_list):
 	count = 0
@@ -36,14 +39,45 @@ def count_feature(words, polarity_list):
 			count += 1
 	return count
 
+
+def like_feature(words):
+	return words["like"]
+
+def great_feature(words):
+	return words["great"]
+
+def not_feature(words):
+	return words["not"]
+
+def money_feature(words):
+	return words["$"]
+
+def exclaim_feature(words):
+	return words["!"]
+
+def d_exclaim_feature(words):
+	return words["!!"]
+
+def taste_feature(words):
+	return words["delicious"] + words["tasty"]
+
 """generates the feature vector for a single train example.
 returns a list of values"""
 def get_all_features(example, st, glove_dict, word_list, pos_words, neg_words):
 	features = []
+	word_dic = collections.Counter(word_list)
 	features.append(size_feature(example))
 	#stemmed_words = [st.stem(word) for word in word_list]
 	features.append(count_feature(word_list, pos_words))
 	features.append(count_feature(word_list, neg_words))
+	features.append(exclaim_feature(word_dic))
+	features.append(d_exclaim_feature(word_dic))
+	features.append(money_feature(word_dic))
+	features.append(num_words_feature(word_dic))
+	features.append(features[1] - features[2])
+	features.append(like_feature(word_dic))
+	features.append(great_feature(word_dic))
+	features.append(not_feature(word_dic))
 
 	return features
 
@@ -81,13 +115,14 @@ def generate_feature_vectors(data, glove=True):
 	GLOVE = PottsUtils.glove2dict('glove.6B.50d.txt')
 	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = set(nltk.corpus.stopwords.words('english'))
+	stop_words.remove("not")
 	corp = nltk.corpus.opinion_lexicon
 	pos_words = set(corp.positive())
 	neg_words = set(corp.negative())
 	vecs = []
 	for train_example in data:
 		word_list = [w for w in train_example[0].split() if w not in stop_words]
-		feature_vec = get_all_features(train_example[0], st, GLOVE, word_list, pos_words, neg_words)
+		feature_vec = get_all_features(train_example[0].lower(), st, GLOVE, word_list, pos_words, neg_words)
 		if glove: feature_vec = get_glove_features(feature_vec, word_list, GLOVE)
 		vecs.append(np.array(feature_vec))
 	return np.array(vecs)
