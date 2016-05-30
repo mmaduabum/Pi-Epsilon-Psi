@@ -109,28 +109,29 @@ returns a list of values"""
 def get_all_features(example, st, glove_dict, word_list, pos_words, neg_words):
 	features = []
 	word_dic = collections.Counter(word_list)
-	features.append(size_feature(example))
+	#features.append(size_feature(example))
 	#stemmed_words = [st.stem(word) for word in word_list]
 	features.append(count_feature(word_list, pos_words))
 	features.append(count_feature(word_list, neg_words))
-	features.append(exclaim_feature(word_dic))
-	features.append(d_exclaim_feature(word_dic))
+	#features.append(exclaim_feature(word_dic))
+	#features.append(d_exclaim_feature(word_dic))
 	features.append(money_feature(word_dic))
-	features.append(num_words_feature(word_dic))
-	features.append(features[1] - features[2])
-	features.append(like_feature(word_dic))
-	features.append(great_feature(word_dic))
-	features.append(not_feature(word_dic))
-	features.append(contains_1_feature(example))
-	features.append(contains_2_feature(example))
-	features.append(contains_3_feature(example))
-	features.append(contains_4_feature(example))
-	features.append(contains_5_feature(example))
-	features.append(contains_star_feature(example))
-	features.append(contains_stars_feature(example))
+	#features.append(num_words_feature(word_dic))
+	#features.append(features[1] - features[2])
+	#features.append(like_feature(word_dic))
+	#features.append(great_feature(word_dic))
+	#features.append(not_feature(word_dic))
+	#features.append(contains_1_feature(example))
+	#features.append(contains_2_feature(example))
+	#features.append(contains_3_feature(example))
+	#features.append(contains_4_feature(example))
+	#features.append(contains_5_feature(example))
+	#features.append(contains_star_feature(example))
+	#features.append(contains_stars_feature(example))
 
 	sum_ = sum(features)
-	norm_features = [float(f)/sum_ for f in features]
+	if sum_ > 0: norm_features = [float(f)/sum_ for f in features]
+	else: norm_features = features
 
 	return norm_features
 
