@@ -75,6 +75,17 @@ features: size, sentiment words, exclaim, d_exclaim
 	-almost all 1s, some 4s and 2s. again all 2s are wrong
 features: sentiment words, money feature
 	-everything except 4, mostly 5s, few 3s (36% overall)
-features
-	- 
-
+features: sentiment words, negation
+	-each class predicted at least once! (36.5% overall accuracy) 
+features: sentiment words, negation, like, great
+	-each class predicted at least once (more balanced too) (37.4% overall accuracy)
+features: sentiment words, number features
+	-each class predicted at least once. (34.8% overall accuracy)
+features: sentiment words, star features
+	-4 never guessed. 3 rarely guessed. (36.5%)
+features: sentiment words, negation, like, great, number features
+	-4 very rarely predicted. 34.8%
+features: sentiment words, star features, number features
+	-4 almost never guessed. 34%
+features: sentiment words, negation, like, great, money
+	-4 is rare. 37.4%
