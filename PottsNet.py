@@ -132,7 +132,7 @@ class ShallowNeuralNetwork:
                 self.forward_propagation(ex)
                 error += self.backward_propagation(labels)
             iteration += 1
-            if self.display_progress:
+            if self.display_progress and iteration % 10 == 0:
                 utils.progress_bar('completed iteration %s; error is %s' % (iteration, error))
         if self.display_progress:
             sys.stderr.write('\n')

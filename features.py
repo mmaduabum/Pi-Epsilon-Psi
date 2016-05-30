@@ -29,6 +29,49 @@ def size_feature(example):
 	return float(len(example))
 
 
+def contains_1_feature(example):
+	if "one" in example or "1" in example:
+		return 1
+	else:
+		return 0
+
+def contains_2_feature(example):
+	if "two" in example or "2" in example:
+		return 1
+	else:
+		return 0
+
+def contains_3_feature(example):
+	if "three" in example or "3" in example:
+		return 1
+	else:
+		return 0
+
+def contains_4_feature(example):
+	if "four" in example or "4" in example:
+		return 1
+	else:
+		return 0
+
+def contains_5_feature(example):
+	if "five" in example or "5" in example:
+		return 1
+	else:
+		return 0
+
+def contains_star_feature(example):
+	if "star" in example and "stars" not in example:
+		return 1
+	else:
+		return 0
+
+def contains_stars_feature(example):
+	if "stars" in example:
+		return 1
+	else:
+		return 0
+
+
 def num_words_feature(words):
 	return len(words)
 
@@ -78,8 +121,18 @@ def get_all_features(example, st, glove_dict, word_list, pos_words, neg_words):
 	features.append(like_feature(word_dic))
 	features.append(great_feature(word_dic))
 	features.append(not_feature(word_dic))
+	features.append(contains_1_feature(example))
+	features.append(contains_2_feature(example))
+	features.append(contains_3_feature(example))
+	features.append(contains_4_feature(example))
+	features.append(contains_5_feature(example))
+	features.append(contains_star_feature(example))
+	features.append(contains_stars_feature(example))
 
-	return features
+	sum_ = sum(features)
+	norm_features = [float(f)/sum_ for f in features]
+
+	return norm_features
 
 
 

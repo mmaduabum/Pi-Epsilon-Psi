@@ -38,7 +38,7 @@ def get_method():
 #parse json data into desired form
 def get_data():
 	# (text, rating) pairs
-	raw_data = utils.create_train_data('yelp_data/very_small.json')
+	raw_data = utils.create_train_data('yelp_data/tiny.json')
 	return raw_data
 
 """Build an array of SVM binary classifiers to be used inplementing out classification model"""
@@ -97,7 +97,7 @@ def nn_baseline_predict(net):
 		pred = net.predict(ex)
 		if pred > 0: predictions.append(1)
 		else: predictions.append(-1)
-	report_results(test_target, predictions)
+	report_results(test_target, predictions, True)
 
 """Cannot run multiclass baseline."""
 def run_nn_baseline():
@@ -114,15 +114,16 @@ def run_nn_baseline():
 
 
 def run_baselines():
-	run_svm_baseline();
-	#run_nn_baseline()
+	#run_svm_baseline();
+	run_nn_baseline()
 
 
 """Print evaluation metrics"""
-def report_results(y_test, y_pred):
+def report_results(y_test, y_pred, baseline=False):
 	#print(f1_score(y_test, y_pred, average="macro"))
 	print "="*80
-	print(classification_report(y_test, y_pred, target_names=['1', '2', '3', '4', '5']))
+	if baseline: print(classification_report(y_test, y_pred, target_names=['neg', 'pos']))
+	else: print(classification_report(y_test, y_pred, target_names=['1', '2', '3', '4', '5']))
 	print "\naccuracy:"
 	print(accuracy_score(y_test, y_pred)) 
 	print "="*80
