@@ -1,0 +1,80 @@
+SVM Random Baseline 5 classes:
+	-average accuracy = 0.20
+
+SVM Actual Baseline
+	(features: size, first 5 words as glove vectors)
+	-average accuracy = 0.29, 0.45
+		===NOTES===
+		glove shit is hard to use because all feature vectors need to be same size. 
+			-some words dont have gloves, some reviews are longer than others
+			-so i tried to use the first few words from the review and glove only thos
+				-results not very good (~29%)
+		currently trying positve and negative word lists instead of glove
+			-so using this it gets up to about 45% with this shit but its prettry variable (31-57) 
+				on the tiny dataset and the 'small' one takes 1000000000000000 years to run so...
+				-K i created a more reasonable dataset (3000) and it runs in about 17 minutes with just
+					the 3 features (size, neg words, pos words) and got 44% accuracy
+
+SVM New Model
+	(features: size, poswords, negwords) 
+	-average accuracy = 0.446 (on tiny)
+	-just ran it on very_small.json (64 minutes) and got 36.3% accuracy 
+		-problem is the one v all classifiers always return false
+	-After fixing bug: all predictions are 1 or 5 and accuracy is 45%
+			-need better features for it to start working i think
+	-with glvoe features im getting 16.6% :(
+		-goes up to 18% when using glove + size, sentiment word features
+
+	PROGRESS: after fixing the bug, our model on glove features gets 31.9%! (this was on the tiny set. gonna run overnight on small)
+
+NN Random Baseline 5 classes:
+	-impossible
+
+NN Actual Baseline
+	(features: glove)
+	-average accuracy = 0
+		-its predicting class 0 everytime for some reason 
+
+	okay so the neural net cant do more than 2 classes. Running it with glove features on 1,2 vs 3,4,5 gets 75% accuracy
+		Note: when the cutoff is moved to distinguish between 1,2,3 vs 4,5 the accuracy goes down to 59%
+	we cant generate a multiclass baseline. I'm gonna just implement our model
+
+NN New Model
+	(features: size, pos, neg)
+	-average accuracy = 0.41 (one run on tiny)
+
+	(features: glove + size, pos, meg)
+	-average accuracy = 0.407960199005 (one run on tiny) 
+							-got 0.274626865672 on a later run
+						0.405970149254 (one run on very_small)
+						0.275621890547 (run on small.json)  --80 minutes to run
+
+	(features: counts)
+		0.11 (one run on tiny)
+		0.407 (one run on very_small)
+		41% on small. every prediction is the same
+
+
+
+PROBLEMS:
+-its predicting the same class everytime
+	-it was predicting all 5s because that was the most common example
+	-after normalizing test data, it predicts 4 every time (actually not sure if its 4, but its the same one every time)
+	-after normalizing train data, it still predicts 2 every time. no idea why :(  
+
+
+features: just size
+	-guess 4 every time
+features: size and sentiment words
+	-guesses 1 most of the time. also guesses 4 and 2 every guess of 2 is incorrect
+features: just sentiment words:
+	-guesses 1s, 2s, and 5s only (36% overall accuracy)
+features: sentiment words, exclaim, d_exclaim
+	-guesses everything except 4 (36% overall accuracy)  (not many 3s, but some)
+features: size, sentiment words, exclaim, d_exclaim
+	-almost all 1s, some 4s and 2s. again all 2s are wrong
+features: sentiment words, money feature
+	-everything except 4, mostly 5s, few 3s (36% overall)
+features
+	- 
+
