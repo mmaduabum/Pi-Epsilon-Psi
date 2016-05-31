@@ -19,7 +19,7 @@ def text_to_json(text):
 
 
 def get_test_data():
-	data = create_train_data('yelp_data/med.json')
+	data = create_train_data('yelp_data/tiny.json')
 	return data
 
 """Function to generate training data from a json file

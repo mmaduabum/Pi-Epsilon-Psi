@@ -95,9 +95,10 @@ features: unigrams, sentiment words, negation, like, great
 	-each class is predicted a reasonable amount. (42.5% overall accuracy)  (on even split with training on tiny)
 													(35% on neural nets)
 			-trained this on very_small and tested on even split and got 100% accuracy  (22 minutes to run)
-				-ran it agan, still perfect with 1.0 F-1
 													(39.7% on neural nets with 0.36 F-1)
-			-trained on very small and tested on tiny and got TODO
+				-ignore this result, data got mixed somehow
+			-trained on very small and tested on tiny and got 43.3% (0.42 F-1)
+													(30.0% on neural nets with 0.26 F-1)
 			-trained on very_small and tested on test_small and got 49.7% (0.49 F-1)
 													(42.9% on neural nets with 0.34 F-1)
 			-trained on tiny and tested on test_small and got 66% accuracy (0.66 F-1)
@@ -123,3 +124,6 @@ features: unigrams, sentiment words, negation, like, great
 		-WE DID IT FAM
 features: bigrams, unigrams, sentiment words, negation, like, great
 	-similar to above but only 42.28%
+
+features: unigram counts, sentiment words, negation, like, great
+	- TODO
