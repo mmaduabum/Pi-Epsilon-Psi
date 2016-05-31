@@ -93,3 +93,7 @@ features: just unigrams
 	-each class predicted at least once. (38% overall accuracy)
 features: unigrams, sentiment words, negation, like, great
 	-each class is predicted a reasonable amount. (42.5% overall accuracy)
+		-baseline for these features is 31%
+		-WE DID IT FAM
+features: bigrams, unigrams, sentiment words, negation, like, great
+	-similar to above but only 42.28%

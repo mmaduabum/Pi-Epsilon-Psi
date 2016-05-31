@@ -75,7 +75,7 @@ def run_random_baseline(k=5):
 def run_svm_baseline():
 	raw_data = get_data()
 	#input_data = np.array([np.array([random.uniform(-0.5, 0.5) for i in range(BASELINE_VECTOR_SIZE)]) for j in range(len(raw_data))])
-	input_data = features.generate_feature_vectors(raw_data, False)
+	input_data = features.generate_feature_vectors(raw_data, False, True)
 	target_data = np.array([int(pair[1]) for pair in raw_data])
 	state = random.randint(0, int(time.time()))
 	#X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
@@ -115,8 +115,8 @@ def run_nn_baseline():
 
 
 def run_baselines():
-	#run_svm_baseline();
-	run_nn_baseline()
+	run_svm_baseline();
+	#run_nn_baseline()
 
 
 """Print evaluation metrics"""

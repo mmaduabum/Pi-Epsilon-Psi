@@ -16,6 +16,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 MAX_WORD_VECS = 5
 MIN_NUM_WORDS = 5
 unigrams = {}
+bigrams = {}
 unigram_init = False
 
 """Use GloVe word vectors for each word in the review"""
@@ -165,7 +166,7 @@ def nn_features(data, glove_dict, st, ignore_list, pos_words, neg_words):
 	return np.array(vecs)
 
 
-def init_unigram_features(data):
+def init_unigram_features(data, bigrams=False):
 	id_ = 0
 	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = set(nltk.corpus.stopwords.words('english'))
@@ -176,13 +177,20 @@ def init_unigram_features(data):
 			if new_word not in unigrams:
 				unigrams[new_word] = id_
 				id_ += 1
-	print len(unigrams)
+		if bigrams:
+			for i, new_word in enumerate(go_words):
+				size = len(go_words)
+				if i + 1 >= size: continue
+				if (new_word, go_words[i+1]) not in bigrams:
+					bigrams[(new_word, go_words[i+1])] = id_
+					id_ += 1
+			
 
 def get_unigram_features(data):
 	vecs = []
 	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = set(nltk.corpus.stopwords.words('english'))
-	vec_size = len(unigrams)
+	vec_size = len(unigrams) + len(bigrams)
 	corp = nltk.corpus.opinion_lexicon
 	pos_words = set(corp.positive())
 	neg_words = set(corp.negative())
@@ -191,9 +199,13 @@ def get_unigram_features(data):
 		words = [st.stem(w) for w in example[0].split() if w not in stop_words]
 		word_list = [w for w in example[0].split() if w not in stop_words]
 		word_dic = collections.Counter(word_list)
-		for word in words:
+		for i, word in enumerate(words):
+			size = len(words)
 			if word in unigrams:
 				feature_vec[unigrams[word]] = 1
+			if i + 1 < size:
+				if (word, words[i+1]) in bigrams:
+					feature_vec[bigrams[(word, words[i+1])]] = 1
 		feature_vec.append(count_feature(word_list, pos_words))
 		feature_vec.append(count_feature(word_list, neg_words))
 		feature_vec.append(like_feature(word_dic))
