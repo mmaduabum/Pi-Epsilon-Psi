@@ -15,6 +15,8 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 MAX_WORD_VECS = 5
 MIN_NUM_WORDS = 5
+unigrams = {}
+unigram_init = False
 
 """Use GloVe word vectors for each word in the review"""
 def glove_feature(word, glove_dict):
@@ -163,9 +165,50 @@ def nn_features(data, glove_dict, st, ignore_list, pos_words, neg_words):
 	return np.array(vecs)
 
 
+def init_unigram_features(data):
+	id_ = 0
+	st = nltk.stem.lancaster.LancasterStemmer()
+	stop_words = set(nltk.corpus.stopwords.words('english'))
+	for example in data:
+		words = example[0].split()
+		go_words = [st.stem(w) for w in words if w not in stop_words]
+		for new_word in go_words:
+			if new_word not in unigrams:
+				unigrams[new_word] = id_
+				id_ += 1
+	print len(unigrams)
+
+def get_unigram_features(data):
+	vecs = []
+	st = nltk.stem.lancaster.LancasterStemmer()
+	stop_words = set(nltk.corpus.stopwords.words('english'))
+	vec_size = len(unigrams)
+	corp = nltk.corpus.opinion_lexicon
+	pos_words = set(corp.positive())
+	neg_words = set(corp.negative())
+	for example in data:
+		feature_vec = [0]*vec_size
+		words = [st.stem(w) for w in example[0].split() if w not in stop_words]
+		word_list = [w for w in example[0].split() if w not in stop_words]
+		word_dic = collections.Counter(word_list)
+		for word in words:
+			if word in unigrams:
+				feature_vec[unigrams[word]] = 1
+		feature_vec.append(count_feature(word_list, pos_words))
+		feature_vec.append(count_feature(word_list, neg_words))
+		feature_vec.append(like_feature(word_dic))
+		feature_vec.append(great_feature(word_dic))
+		feature_vec.append(not_feature(word_dic))
+		vecs.append(np.array(feature_vec))
+	return vecs
+
+
+
 """generates feature vectors for each train example and returns
 and np matrix with the values"""
-def generate_feature_vectors(data, glove=True):
+def generate_feature_vectors(data, glove=True, uni=False):
+	if uni:
+		return get_unigram_features(data)
 	GLOVE = PottsUtils.glove2dict('glove.6B.50d.txt')
 	st = nltk.stem.lancaster.LancasterStemmer()
 	stop_words = set(nltk.corpus.stopwords.words('english'))
@@ -180,3 +223,4 @@ def generate_feature_vectors(data, glove=True):
 		if glove: feature_vec = get_glove_features(feature_vec, word_list, GLOVE)
 		vecs.append(np.array(feature_vec))
 	return np.array(vecs)
+

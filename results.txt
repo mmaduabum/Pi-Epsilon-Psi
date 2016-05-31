@@ -89,3 +89,7 @@ features: sentiment words, star features, number features
 	-4 almost never guessed. 34%
 features: sentiment words, negation, like, great, money
 	-4 is rare. 37.4%
+features: just unigrams
+	-each class predicted at least once. (38% overall accuracy)
+features: unigrams, sentiment words, negation, like, great
+	-each class is predicted a reasonable amount. (42.5% overall accuracy)

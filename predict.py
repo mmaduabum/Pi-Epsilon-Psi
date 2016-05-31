@@ -20,6 +20,7 @@ BASELINE = 2
 RANDOM_BASELINE = 3
 BASELINE_VECTOR_SIZE = 20
 USE_GLOVE = False
+UNI = True
 
 #Select option: SVM or NN
 def get_method():
@@ -44,7 +45,7 @@ def get_data():
 """Build an array of SVM binary classifiers to be used inplementing out classification model"""
 def run_svm_classifier():
 	data = get_data()
-	model = our_svm.Our_SVM(USE_GLOVE)
+	model = our_svm.Our_SVM(USE_GLOVE, UNI)
 	model.train_submodels(data)
 	predictions, targets = model.score_model()
 	report_results(targets, predictions)
