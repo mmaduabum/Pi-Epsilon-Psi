@@ -15,8 +15,9 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 Uses 15 internal neural nets: 5 using the one vs others method and
 10 more for each pair of classes."""
 class Our_NN:
-	def __init__(self, use_glove=False):
+	def __init__(self, use_glove=False, unigrams=True):
 		self.use_glove = use_glove
+		self.unigrams = unigrams
 		self.submodels = []
 		self.test_data = utils.get_test_data()
 		self.ONEvALL = 0
@@ -36,7 +37,7 @@ class Our_NN:
 		self.FOURvFIVE = 14
 
 	def train_submodels(self, train_data):
-		feature_vecs = features.generate_feature_vectors(train_data, self.use_glove)
+		feature_vecs = features.generate_feature_vectors(train_data, self.use_glove, self.unigrams)
 		all_targets = [int(ex[1]) for ex in train_data]
 		#train initial 5 classifiers
 		for i in range(5):
@@ -62,16 +63,16 @@ class Our_NN:
 		fours_and_fives = [ex for ex in train_data if int(ex[1]) == 4 or int(ex[1]) == 5]
 
 		#generate feature vectors for each data subset
-		input_12 = features.generate_feature_vectors(ones_and_twos, self.use_glove)
-		input_13 = features.generate_feature_vectors(ones_and_threes, self.use_glove)
-		input_14 = features.generate_feature_vectors(ones_and_fours, self.use_glove)
-		input_15 = features.generate_feature_vectors(ones_and_fives, self.use_glove)
-		input_23 = features.generate_feature_vectors(twos_and_threes, self.use_glove)
-		input_24 = features.generate_feature_vectors(twos_and_fours, self.use_glove)
-		input_25 = features.generate_feature_vectors(twos_and_fives, self.use_glove)
-		input_34 = features.generate_feature_vectors(threes_and_fours, self.use_glove)
-		input_35 = features.generate_feature_vectors(threes_and_fives, self.use_glove)
-		input_45 = features.generate_feature_vectors(fours_and_fives, self.use_glove)
+		input_12 = features.generate_feature_vectors(ones_and_twos, self.use_glove, self.unigrams)
+		input_13 = features.generate_feature_vectors(ones_and_threes, self.use_glove, self.unigrams)
+		input_14 = features.generate_feature_vectors(ones_and_fours, self.use_glove, self.unigrams)
+		input_15 = features.generate_feature_vectors(ones_and_fives, self.use_glove, self.unigrams)
+		input_23 = features.generate_feature_vectors(twos_and_threes, self.use_glove, self.unigrams)
+		input_24 = features.generate_feature_vectors(twos_and_fours, self.use_glove, self.unigrams)
+		input_25 = features.generate_feature_vectors(twos_and_fives, self.use_glove, self.unigrams)
+		input_34 = features.generate_feature_vectors(threes_and_fours, self.use_glove, self.unigrams)
+		input_35 = features.generate_feature_vectors(threes_and_fives, self.use_glove, self.unigrams)
+		input_45 = features.generate_feature_vectors(fours_and_fives, self.use_glove, self.unigrams)
 
 		#generate the targets for each data subset
 		target_12 = [np.array([1]) if int(ex[1]) == 1 else np.array([-1]) for ex in ones_and_twos]
@@ -120,7 +121,7 @@ class Our_NN:
 
 	def score_model(self):
 		print "scoring..."
-		test_examples = features.generate_feature_vectors(self.test_data, self.use_glove)
+		test_examples = features.generate_feature_vectors(self.test_data, self.use_glove, self.unigrams)
 		predictions = []
 		for ex in test_examples:
 			p = self.our_predict(ex)

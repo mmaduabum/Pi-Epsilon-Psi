@@ -39,7 +39,7 @@ def get_method():
 #parse json data into desired form
 def get_data():
 	# (text, rating) pairs
-	raw_data = utils.create_train_data('yelp_data/tiny.json')
+	raw_data = utils.create_train_data('yelp_data/very_small.json')
 	return raw_data
 
 """Build an array of SVM binary classifiers to be used inplementing out classification model"""
