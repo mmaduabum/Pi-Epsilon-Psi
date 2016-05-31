@@ -95,6 +95,12 @@ def great_feature(words):
 def not_feature(words):
 	return words["not"]
 
+def but_feature(words):
+	return words["but"]
+
+def amplify_feature(words):
+	return words["very"] + words["extremely"]
+
 def money_feature(words):
 	return words["$"]
 

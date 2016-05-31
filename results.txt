@@ -92,8 +92,18 @@ features: sentiment words, negation, like, great, money
 features: just unigrams
 	-each class predicted at least once. (38% overall accuracy)
 features: unigrams, sentiment words, negation, like, great
-	-each class is predicted a reasonable amount. (42.5% overall accuracy)  (on even split with training on tiny)
+	-each class is predicted a reasonable amount. (42.5% overall accuracy)  th 0.43 F-1) (on even split with training on tiny)
 													(35% on neural nets)
+				^this was with gamma = 1/n_features
+				gamma=0.0000001 : 42.5%
+				gamma=0.000001 : 42.5%
+				gamma=0.00001 : 42.5%
+				gamma=0.0001 : 42.5%
+				gamma=0.001 : 42.5%
+				gamma=0.01 : 42.5%
+				gamma=0.1 : 42.5%
+				gamma=0.99 : 42.5%
+					-guess hyperparameters dont mean shit
 			-trained this on very_small and tested on even split and got 100% accuracy  (22 minutes to run)
 													(39.7% on neural nets with 0.36 F-1)
 				-ignore this result, data got mixed somehow
@@ -101,6 +111,7 @@ features: unigrams, sentiment words, negation, like, great
 													(30.0% on neural nets with 0.26 F-1)
 			-trained on very_small and tested on test_small and got 49.7% (0.49 F-1)
 													(42.9% on neural nets with 0.34 F-1)
+				-SVM baseline for these datasets is 40%
 			-trained on tiny and tested on test_small and got 66% accuracy (0.66 F-1)
 													(35.6% on neural nets with 0.37 F-1)
 				NOTE that tiny is a subset of test_small
@@ -126,4 +137,8 @@ features: bigrams, unigrams, sentiment words, negation, like, great
 	-similar to above but only 42.28%
 
 features: unigram counts, sentiment words, negation, like, great
-	- TODO
+	- 39%	
+features: unigrams, sentiment words, negation, like, great, but, amplify
+	-42.5%
+features: normalized- unigram counts, sentiment words, negation, like, great
+	- almost all 2s, no 5s or 3s. 10% accuracy
