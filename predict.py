@@ -81,10 +81,13 @@ def run_svm_baseline():
 	#X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(input_data, target_data, test_size=0.1, random_state=state)
 	test_data = utils.get_test_data()
 	target_test = np.array([int(pair[1]) for pair in test_data])
-	input_test = features.generate_feature_vectors(test_data, False)
+	input_test = features.generate_feature_vectors(test_data, False, True)
 	clf = svm.SVC(kernel='linear', C=1).fit(input_data, target_data)
-	x = clf.score(input_test, target_test)
-	print x 
+	preds = [clf.predict(x)[0] for x in input_test]
+	#x = clf.score(input_test, target_test)
+	#print x 
+	print "reporting..."
+	report_results(target_test, preds)
 
 
 """Neural Net does not support multiclass classification"""
@@ -126,7 +129,14 @@ def report_results(y_test, y_pred, baseline=False):
 	if baseline: print(classification_report(y_test, y_pred, target_names=['neg', 'pos']))
 	else: print(classification_report(y_test, y_pred, target_names=['1', '2', '3', '4', '5']))
 	print "\naccuracy:"
-	print(accuracy_score(y_test, y_pred)) 
+	print(accuracy_score(y_test, y_pred))
+	diffs = [abs(a - b) for a, b in zip(y_test, y_pred)]
+	sum_ = sum(diffs)
+	avg = float(sum_)/float(len(diffs)) 
+	print "="*80
+	print diffs
+	print "average star error is: "
+	print avg
 	print "="*80
 
 
