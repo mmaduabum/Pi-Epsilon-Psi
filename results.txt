@@ -143,3 +143,10 @@ features: unigrams, sentiment words, negation, like, great, but, amplify
 	-42.5%
 features: normalized- unigram counts, sentiment words, negation, like, great
 	- almost all 2s, no 5s or 3s. 10% accuracy
+
+
+
+
+GRAPHS/CHARTS to make
+-different datasets for training vs accuracy with features
+-plot with both F-1 scores and average star errors
