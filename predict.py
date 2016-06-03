@@ -48,7 +48,7 @@ def run_svm_classifier():
 	model = our_svm.Our_SVM(USE_GLOVE, UNI)
 	model.train_submodels(data)
 	predictions, targets = model.score_model()
-	report_results(targets, predictions)
+	report_results(targets, predictions, debug=data)
 
 
 """Build an array of neural net binary classifiers to be used inplementing out classification model"""
@@ -123,7 +123,7 @@ def run_baselines():
 
 
 """Print evaluation metrics"""
-def report_results(y_test, y_pred, baseline=False):
+def report_results(y_test, y_pred, baseline=False, debug=None):
 	#print(f1_score(y_test, y_pred, average="macro"))
 	print "="*80
 	if baseline: print(classification_report(y_test, y_pred, target_names=['neg', 'pos']))
@@ -138,6 +138,13 @@ def report_results(y_test, y_pred, baseline=False):
 	print "average star error is: "
 	print avg
 	print "="*80
+	if debug is not None:
+		for i, p in enumerate(y_test):
+			if p != y_pred[i]:
+				print ">"*80 
+				print debug[i][0]
+				print "predicted " + str(y_pred[i]) + " instead of " + str(p)
+				print "<"*80 
 
 
 def main():
